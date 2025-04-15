@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul du Coefficient de Diffusion</title>
+    <link rel="shortcut icon" href="../static/images/logo_head.png" alt="Logo DiffMate">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 30px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calcul du Coefficient de Diffusion</h1>
+        <form action="/calcul" method="POST">
+            <div class="form-group">
+                <label for="D_AB_initial">D_AB Initial</label>
+                <input type="number" step="any" class="form-control" name="D_AB_initial" required>
+            </div>
+            <div class="form-group">
+                <label for="D_BA_initial">D_BA Initial</label>
+                <input type="number" step="any" class="form-control" name="D_BA_initial" required>
+            </div>
+            <div class="form-group">
+                <label for="fraction_A">Fraction A</label>
+                <input type="number" step="any" class="form-control" name="fraction_A" required>
+            </div>
+            <div class="form-group">
+                <label for="coef_lambda_A">Coefficient Lambda A</label>
+                <input type="number" step="any" class="form-control" name="coef_lambda_A" required>
+            </div>
+            <div class="form-group">
+                <label for="coef_lambda_B">Coefficient Lambda B</label>
+                <input type="number" step="any" class="form-control" name="coef_lambda_B" required>
+            </div>
+            <div class="form-group">
+                <label for="q_A">q_A</label>
+                <input type="number" step="any" class="form-control" name="q_A" required>
+            </div>
+            <div class="form-group">
+                <label for="q_B">q_B</label>
+                <input type="number" step="any" class="form-control" name="q_B" required>
+            </div>
+            <div class="form-group">
+                <label for="theta_A">Theta A</label>
+                <input type="number" step="any" class="form-control" name="theta_A" required>
+            </div>
+            <div class="form-group">
+                <label for="theta_B">Theta B</label>
+                <input type="number" step="any" class="form-control" name="theta_B" required>
+            </div>
+            <div class="form-group">
+                <label for="theta_BA">Theta BA</label>
+                <input type="number" step="any" class="form-control" name="theta_BA" required>
+            </div>
+            <div class="form-group">
+                <label for="theta_AB">Theta AB</label>
+                <input type="number" step="any" class="form-control" name="theta_AB" required>
+            </div>
+            <div class="form-group">
+                <label for="theta_AA">Theta AA</label>
+                <input type="number" step="any" class="form-control" name="theta_AA" required>
+            </div>
+            <div class="form-group">
+                <label for="theta_BB">Theta BB</label>
+                <input type="number" step="any" class="form-control" name="theta_BB" required>
+            </div>
+            <div class="form-group">
+                <label for="tau_AB">Tau AB</label>
+                <input type="number" step="any" class="form-control" name="tau_AB" required>
+            </div>
+            <div class="form-group">
+                <label for="tau_BA">Tau BA</label>
+                <input type="number" step="any" class="form-control" name="tau_BA" required>
+            </div>
+            <div class="form-group">
+                <label for="D_exp">D_exp (valeur expérimentale)</label>
+                <input type="number" step="any" class="form-control" name="D_exp" required>
+            </div>
+            <button type="submit" class="btn btn-custom btn-block">Calculer</button>
+        </form>
+    </div>
+</body>
+</html>
