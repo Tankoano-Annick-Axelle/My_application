@@ -364,42 +364,41 @@ def invalidate_reset_token(email):
     conn.close()
 
 
-
-    # Route pour le calcul du coefficient de diffusion
 @app.route('/calcul', methods=['GET', 'POST'])
 def calcul():
     if request.method == 'POST':
-        # Récupère les données du formulaire
-        D_AB_initial = float(request.form['D_AB_initial'])
-        D_BA_initial = float(request.form['D_BA_initial'])
-        fraction_A = float(request.form['fraction_A'])
-        coef_lambda_A = float(request.form['coef_lambda_A'])
-        coef_lambda_B = float(request.form['coef_lambda_B'])
-        q_A = float(request.form['q_A'])
-        q_B = float(request.form['q_B'])
-        theta_A = float(request.form['theta_A'])
-        theta_B = float(request.form['theta_B'])
-        theta_BA = float(request.form['theta_BA'])
-        theta_AB = float(request.form['theta_AB'])
-        theta_AA = float(request.form['theta_AA'])
-        theta_BB = float(request.form['theta_BB'])
-        tau_AB = float(request.form['tau_AB'])
-        tau_BA = float(request.form['tau_BA'])
-        D_exp = float(request.form['D_exp'])
+        try:
+            D_AB_initial = float(request.form.get('D_AB_initial', 0))
+            D_BA_initial = float(request.form.get('D_BA_initial', 0))
+            fraction_A = float(request.form.get('fraction_A', 0))
+            coef_lambda_A = float(request.form.get('coef_lambda_A', 0))
+            coef_lambda_B = float(request.form.get('coef_lambda_B', 0))
+            q_A = float(request.form.get('q_A', 0))
+            q_B = float(request.form.get('q_B', 0))
+            theta_A = float(request.form.get('theta_A', 0))
+            theta_B = float(request.form.get('theta_B', 0))
+            theta_BA = float(request.form.get('theta_BA', 0))
+            theta_AB = float(request.form.get('theta_AB', 0))
+            theta_AA = float(request.form.get('theta_AA', 0))
+            theta_BB = float(request.form.get('theta_BB', 0))
+            tau_AB = float(request.form.get('tau_AB', 0))
+            tau_BA = float(request.form.get('tau_BA', 0))
+            D_exp = float(request.form.get('D_exp', 0))
 
-        # Effectue le calcul du coefficient de diffusion
-        D_AB, erreur_relative = calculer_coefficient_diffusion(
-            D_AB_initial, D_BA_initial, fraction_A, coef_lambda_A, coef_lambda_B,
-            q_A, q_B, theta_A, theta_B, theta_BA, theta_AB, theta_AA, theta_BB,
-            tau_AB, tau_BA, D_exp
-        )
+            D_AB, erreur_relative = calculer_coefficient_diffusion(
+                D_AB_initial, D_BA_initial, fraction_A, coef_lambda_A, coef_lambda_B,
+                q_A, q_B, theta_A, theta_B, theta_BA, theta_AB, theta_AA, theta_BB,
+                tau_AB, tau_BA, D_exp
+            )
 
-        # Récupère l'ID de l'utilisateur connecté
-        user_id = 1  # Remplace par l'ID réel de l'utilisateur connecté, par exemple via 'session'
-         # Enregistrer les résultats dans la base de données
-        add_resultat_to_database_db(user_id, D_AB, erreur_relative)
-        #On affiche les résultats dans resultats.html
-        return render_template('resultats.html', D_AB=D_AB, erreur_relative=erreur_relative)
+            user_id = 1  # À remplacer
+            add_resultat_to_database_db(user_id, D_AB, erreur_relative)
+
+            return render_template('resultats.html', D_AB=D_AB, erreur_relative=erreur_relative)
+
+        except Exception as e:
+            print(f"Erreur lors du traitement du formulaire : {e}")
+            return "Erreur dans les données du formulaire", 500
 
     return render_template('calcul.html')
 
