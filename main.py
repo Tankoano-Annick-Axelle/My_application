@@ -1,5 +1,3 @@
-
-
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime, timedelta
 from flask import session
@@ -285,9 +283,14 @@ def reset_password():
     if request.method == 'POST':
         email = request.form['email']
 
+        # Validation de l'email
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            flash("Veuillez entrer une adresse email valide.", 'danger')
+            return render_template('reset_password.html')
+
         user = get_user_by_email(email)
         if user:
-            reset_token = store_reset_token(email)  # <-- email bien défini ici
+            reset_token = store_reset_token(email)
             reset_link = url_for('reset_password_token', token=reset_token, _external=True)
 
             msg = Message("Récupération de mot de passe", recipients=[email])
@@ -298,6 +301,7 @@ def reset_password():
                 flash("Un email de récupération vous a été envoyé.", 'success')
                 return redirect(url_for('login'))
             except Exception as e:
+                print(f"Erreur lors de l'envoi de l'email : {e}")
                 flash("Erreur lors de l'envoi de l'email.", 'danger')
         else:
             flash("Aucun utilisateur trouvé avec cet email.", 'danger')
@@ -306,13 +310,17 @@ def reset_password():
 
 
 def get_user_by_reset_token(token):
-    conn = get_db_connection()  # Connexion à la base de données
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users WHERE reset_token = %s", (token,))
-    user = cursor.fetchone()  # Récupère le premier utilisateur correspondant
-    cursor.close()
-    conn.close()
-    return user  # Retourne l'utilisateur s'il existe
+    try:
+        conn = get_db_connection()  # Connexion à la base de données
+        cursor = conn.cursor(cursor_factory=RealDictCursor)  # Utilisation de RealDictCursor
+        cursor.execute("SELECT * FROM users WHERE reset_token = %s", (token,))
+        user = cursor.fetchone()  # Récupère le premier utilisateur correspondant
+        cursor.close()
+        conn.close()
+        return user  # Retourne l'utilisateur s'il existe
+    except Exception as e:
+        print(f"Erreur lors de la récupération de l'utilisateur par token : {e}")
+        return None
 
    
    
