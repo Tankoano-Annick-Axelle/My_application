@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultats du Calcul</title>
+    <title>Résultats</title>
     <link rel="shortcut icon" href="../static/images/logo_head.png" alt="Logo DiffMate">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -27,32 +27,46 @@
         h1 {
             color: #007bff;
             margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: bold;
         }
         p {
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #333;
         }
         .btn-custom {
             background-color: #007bff;
             color: white;
-            padding: 10px 30px;
-            font-size: 16px;
+            padding: 12px 35px;
+            font-size: 18px;
             border-radius: 25px;
             transition: background-color 0.3s ease;
+            text-decoration: none;
         }
         .btn-custom:hover {
             background-color: #0056b3;
-            text-decoration: none;
-            color: white;
+        }
+        .alert-success {
+            background-color: #e9f7ef;
+            color: #3c763d;
+            border-color: #d6e9c6;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="result-box">
-        <h1>Résultats du Calcul</h1>
-        <p><strong>Coefficient de diffusion D_AB :</strong> {{ D_AB }}</p>
-        <p><strong>Erreur relative :</strong> {{ erreur_relative }} %</p>
-        <a href="{{ url_for('home') }}" class="btn btn-custom mt-4">Retour à l'accueil</a>
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="result-box">
+            <h1 class="text-center">Résultats du Calcul</h1>
+            <div class="alert alert-success mt-4">
+                <p><strong>D_AB Calculé :</strong> {{ D_AB }}</p>
+                <p><strong>Erreur Relative :</strong> {{ erreur_relative }}%</p>
+            </div>
+            <div class="text-center mt-4">
+                <a href="/home" class="btn btn-custom">Retour à l'Accueil</a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

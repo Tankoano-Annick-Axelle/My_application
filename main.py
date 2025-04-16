@@ -11,6 +11,7 @@ import numpy as np
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
+import smtplib
 
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -26,10 +27,10 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=int(os.getenv('SESS
 app.config['SESSION_PERMANENT'] = True
 
 # Configuration de l'email
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS')
-app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL')
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
+app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL', 'False') == 'True'
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
@@ -300,9 +301,12 @@ def reset_password():
                 mail.send(msg)
                 flash("Un email de récupération vous a été envoyé.", 'success')
                 return redirect(url_for('login'))
+            except smtplib.SMTPException as e:
+                print(f"Erreur SMTP : {e}")
+                flash("Erreur lors de l'envoi de l'email. Vérifiez la configuration SMTP.", 'danger')
             except Exception as e:
-                print(f"Erreur lors de l'envoi de l'email : {e}")
-                flash("Erreur lors de l'envoi de l'email.", 'danger')
+                print(f"Erreur générale : {e}")
+                flash("Une erreur est survenue lors de l'envoi de l'email.", 'danger')
         else:
             flash("Aucun utilisateur trouvé avec cet email.", 'danger')
 
@@ -376,7 +380,7 @@ def invalidate_reset_token(email):
 def calcul():
     if request.method == 'POST':
         try:
-            # Conversion des entrées en float, y compris les formats scientifiques
+            # Récupération des données du formulaire
             D_AB_initial = float(request.form.get('D_AB_initial', 0))
             D_BA_initial = float(request.form.get('D_BA_initial', 0))
             fraction_A = float(request.form.get('fraction_A', 0))
@@ -394,16 +398,14 @@ def calcul():
             tau_BA = float(request.form.get('tau_BA', 0))
             D_exp = float(request.form.get('D_exp', 0))
 
-            # Appel de la fonction de calcul
+            # Calcul des résultats
             D_AB, erreur_relative = calculer_coefficient_diffusion(
                 D_AB_initial, D_BA_initial, fraction_A, coef_lambda_A, coef_lambda_B,
                 q_A, q_B, theta_A, theta_B, theta_BA, theta_AB, theta_AA, theta_BB,
                 tau_AB, tau_BA, D_exp
             )
 
-            user_id = 1  # À remplacer par l'ID utilisateur réel
-            add_resultat_to_database_db(user_id, D_AB, erreur_relative)
-
+            # Passer les résultats à la page resultats.html
             return render_template('resultats.html', D_AB=D_AB, erreur_relative=erreur_relative)
 
         except ValueError as e:
@@ -441,6 +443,19 @@ def logout_user():
     return redirect(url_for('login'))
 
 
+def test_smtp_connection():
+    try:
+        with smtplib.SMTP(app.config['MAIL_SERVER'], app.config['MAIL_PORT']) as server:
+            server.ehlo()
+            if app.config['MAIL_USE_TLS']:
+                server.starttls()
+            server.login(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
+            print("Connexion SMTP réussie.")
+    except Exception as e:
+        print(f"Erreur de connexion SMTP : {e}")
+
+# Appeler cette fonction au démarrage pour tester la connexion SMTP
+test_smtp_connection()
 
 
 # Exécution de l'application Flask
