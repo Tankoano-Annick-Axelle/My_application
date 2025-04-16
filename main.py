@@ -12,6 +12,7 @@ import re
 import numpy as np
 from urllib.parse import urlparse
 from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
 
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -53,8 +54,8 @@ def get_db_connection():
 
 # Fonction pour récupérer un utilisateur par email
 def get_user_by_email(email):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
     user = cursor.fetchone()
     cursor.close()
