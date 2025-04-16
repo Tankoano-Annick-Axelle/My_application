@@ -376,6 +376,7 @@ def invalidate_reset_token(email):
 def calcul():
     if request.method == 'POST':
         try:
+            # Conversion des entrées en float, y compris les formats scientifiques
             D_AB_initial = float(request.form.get('D_AB_initial', 0))
             D_BA_initial = float(request.form.get('D_BA_initial', 0))
             fraction_A = float(request.form.get('fraction_A', 0))
@@ -393,20 +394,26 @@ def calcul():
             tau_BA = float(request.form.get('tau_BA', 0))
             D_exp = float(request.form.get('D_exp', 0))
 
+            # Appel de la fonction de calcul
             D_AB, erreur_relative = calculer_coefficient_diffusion(
                 D_AB_initial, D_BA_initial, fraction_A, coef_lambda_A, coef_lambda_B,
                 q_A, q_B, theta_A, theta_B, theta_BA, theta_AB, theta_AA, theta_BB,
                 tau_AB, tau_BA, D_exp
             )
 
-            user_id = 1  # À remplacer
+            user_id = 1  # À remplacer par l'ID utilisateur réel
             add_resultat_to_database_db(user_id, D_AB, erreur_relative)
 
             return render_template('resultats.html', D_AB=D_AB, erreur_relative=erreur_relative)
 
+        except ValueError as e:
+            print(f"Erreur de conversion des données : {e}")
+            flash("Veuillez entrer des valeurs numériques valides.", 'danger')
+            return redirect(url_for('calcul'))
         except Exception as e:
             print(f"Erreur lors du traitement du formulaire : {e}")
-            return "Erreur dans les données du formulaire", 500
+            flash("Une erreur est survenue lors du calcul.", 'danger')
+            return redirect(url_for('calcul'))
 
     return render_template('calcul.html')
 
