@@ -8,10 +8,11 @@
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../static/images/logo_head.png">
+    <link rel="stylesheet" href="styles.css"> <!-- Si tu externalises tes styles -->
 
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             background-color: #ffffff; /* Fond blanc */
             margin: 0;
             padding: 0;
@@ -70,10 +71,6 @@
             color: #333;
         }
 
-        .section-content {
-            margin-top: 20px;
-        }
-
         .highlight {
             color: #007bff; /* Bleu Bootstrap */
             font-weight: bold;
@@ -93,7 +90,7 @@
 <body id="A propos">
 
     <header>
-        <h1>Calculateur du coefficient de diffusion</h1>
+        <h1>Coefficient de diffusion</h1>
     </header>
 
     <nav class="container">
@@ -115,7 +112,8 @@
         </p>
 
         <div class="image-section text-center">
-            <img src="./images/diffusion.png" alt="Diffusion Illustration" class="img-fluid">
+            <img src="{{ url_for('static', filename='images/image_diffusion.jpg') }}" alt="Illustration montrant la diffusion des particules dans un milieu" class="img-fluid">
+
         </div>
 
         <main>
@@ -137,6 +135,7 @@
                     <br>
                     L'équilibre liquide-vapeur : Les coefficients d'activité influencent l'évaporation et la condensation, éléments clés du transfert de masse dans les procédés de séparation, tels que la distillation.
                     <br>
+                     <br>
                     <strong>Avantages de la méthode UNIFAC pour le transfert de masse</strong>
                     <br>
                     Elle permet la: 
@@ -145,6 +144,7 @@
                     Réduction des calculs complexes : En utilisant des groupes fonctionnels pour décrire les interactions, UNIFAC réduit la complexité des calculs thermodynamiques pour des mélanges complexes.
                     <br>
                     Large gamme d'applications : La méthode peut être appliquée à différents types de mélanges, qu'ils soient gazeux, liquides ou dans des systèmes immiscibles, ce qui en fait un outil polyvalent dans l'analyse du transfert de masse.
+                    <br>
                     <br>
                     <strong>Utilisation de la méthode UNIFAC et de la méthode Hsu et Chen pour le calcul du coefficient de diffusion</strong>
                     <br>
@@ -161,7 +161,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 Calculateur du coefficient de diffusion. Tous droits réservés.</p>
+        <p>&copy; 2025 DiffMate. Tous droits réservés.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

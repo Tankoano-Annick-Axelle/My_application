@@ -1,0 +1,42 @@
+# Fichiers de configuration sensibles
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Fichiers de configuration pour MySQL
+*.log
+
+# Éviter de versionner les fichiers avec des informations sensibles comme les mots de passe et les clés
+config.py
+credentials.py
+
+
+# Dossiers de l'environnement virtuel
+venv/
+*.egg-info
+
+# Fichiers d'IDE ou d'éditeurs
+.vscode/
+.idea/
+
+# Fichiers temporaires
+*.swp
+*.bak
+*.tmp
+
+# Ne pas versionner les fichiers spécifiques à l'application Flask
+instance/
+*.flaskenv
+
+# Ne pas inclure le fichier contenant les informations sensibles de l'email
+*.email
+
+# Ne pas versionner le fichier qui contient la clé secrète
+*.secret
+# Fichier contenant les variables d'environnement
+.env

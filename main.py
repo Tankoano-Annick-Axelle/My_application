@@ -1,4 +1,5 @@
 
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime, timedelta
 from flask import session
@@ -9,35 +10,42 @@ import mysql.connector
 import numpy as np
 import os
 import binascii
+import re
+
+#import os
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
 
 # Création de l'application Flask
 app = Flask(__name__)
-app.secret_key = '123456'
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
-#Configuration de la session
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
+# Configuration de la session
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=int(os.getenv('SESSION_LIFETIME')))
 app.config['SESSION_PERMANENT'] = True
 
 # Configuration de l'email
-app.config['MAIL_SERVER'] = 'smtp.office365.com'  # Utilisation d'Outlook comme serveur SMTP
-app.config['MAIL_PORT'] = 587  # Port pour envoyer les emails (587 est pour TLS)
-app.config['MAIL_USE_TLS'] = True  # Utiliser TLS pour la sécurité
-app.config['MAIL_USE_SSL'] = False  # Ne pas utiliser SSL
-app.config['MAIL_USERNAME'] = 'axelletanko@outlook.com'  # Ton adresse email Outlook
-app.config['MAIL_PASSWORD'] = 'iihvvrxmsrokrqbt' # Ton mot de passe d'application généré
-app.config['MAIL_DEFAULT_SENDER'] = 'axelletanko26@outlook.com'  # Adresse email de l'expéditeur
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 
 mail = Mail(app)
 
 # Paramètres de la base de données MySQL
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'tankoano',  # Votre mot de passe MySQL
-    'database': 'database_db',  # Remplacez par le nom de votre base de données
-    'port': 3308
-    
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME'),
+    'port': int(os.getenv('DB_PORT'))
 }
+
 
 # Connexion à la base de données
 def get_db_connection():
@@ -54,10 +62,10 @@ def get_user_by_email(email):
     return user
 
 # Ajoute un utilisateur dans la base de données
-def add_user_to_db(email, password_hash, date_naissance, genre):
+def add_user_to_db(email, password_hash, date_naissance, genre, nom):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO users (email, password_hash, date_naissance, genre) VALUES (%s, %s,%s,%s)", (email, password_hash, date_naissance, genre))
+    cursor.execute("INSERT INTO users (email, password_hash, date_naissance, genre, nom) VALUES (%s, %s,%s,%s,%s)", (email, password_hash, date_naissance, genre, nom))
     conn.commit()
     cursor.close()
     conn.close()
@@ -158,12 +166,18 @@ def login():
 
     return render_template('login.html')
 
-# Route pour la page d'accueil (après connexion réussie)
 @app.route('/')
+def index():
+    return render_template('accueil.html')  # La page avec bouton "Se connecter"
+
+
+# Route pour la page d'accueil (après connexion réussie)
+@app.route('/home')
 def home():
     if 'user_email' not in session:
         return redirect(url_for('login'))
-    return render_template('home.html')
+    return render_template('home.html')  # Accueil après login
+
 #Route pour se déconnecter
 @app.route('/logout')
 def logout():
@@ -171,6 +185,8 @@ def logout():
     flash("Vous avez été déconnecté avec succès.", "success")
     return redirect(url_for('login'))
 
+def contient_caractere_special(mot_de_passe):
+    return re.search(r"[!@#$%^&*(),.?\":{}|<>]", mot_de_passe) is not None
 
 # Route pour l'inscription des utilisateurs
 @app.route('/signup', methods=['GET', 'POST'])
@@ -180,8 +196,13 @@ def signup():
         mot_de_passe = request.form['password']
         date_naissance = request.form['date_naissance']
         genre = request.form['genre']
+        nom = request.form['nom']
 
-    
+       # Vérification du mot de passe
+        if not contient_caractere_special(mot_de_passe):
+            flash("Le mot de passe doit contenir au moins un caractère spécial !", "danger")
+            return render_template("signup.html")
+
         # Vérifie si l'utilisateur existe déjà
         existing_user = get_user_by_email(email)
         if existing_user:
@@ -190,7 +211,7 @@ def signup():
 
         # Crée un utilisateur avec un mot de passe hashé
         password_hash = generate_password_hash(mot_de_passe)
-        add_user_to_db(email, password_hash, date_naissance, genre)
+        add_user_to_db(email, password_hash, date_naissance, genre, nom)
         
         flash("Votre compte a été créé avec succès !", 'success')
         return redirect(url_for('login'))  # Redirige vers la page de connexion
@@ -220,34 +241,27 @@ def store_reset_token(email):
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'POST':
-        #username = request.form['username']
         email = request.form['email']
 
-        # Vérifie si l'utilisateur existe grâce à son email
         user = get_user_by_email(email)
-
         if user:
-            # Génère et stocke le token
-            reset_token = store_reset_token(email)
-
-            # Crée le lien de réinitialisation avec le token
+            reset_token = store_reset_token(email)  # <-- email bien défini ici
             reset_link = url_for('reset_password_token', token=reset_token, _external=True)
 
-            # Crée le message à envoyer
             msg = Message("Récupération de mot de passe", recipients=[email])
-            msg.body = f"Bonjour ,\n\nPour réinitialiser votre mot de passe, cliquez sur le lien suivant : {reset_link}"
-            
+            msg.body = f"Bonjour,\n\nPour réinitialiser votre mot de passe, cliquez ici : {reset_link}"
+
             try:
                 mail.send(msg)
                 flash("Un email de récupération vous a été envoyé.", 'success')
                 return redirect(url_for('login'))
             except Exception as e:
-                # En cas d'erreur, tu peux logger l'exception e
-                flash("Une erreur est survenue lors de l'envoi de l'email. Essayez à nouveau.", 'danger')
+                flash("Erreur lors de l'envoi de l'email.", 'danger')
         else:
             flash("Aucun utilisateur trouvé avec cet email.", 'danger')
 
     return render_template('reset_password.html')
+
 
 def get_user_by_reset_token(token):
     conn = get_db_connection()  # Connexion à la base de données
@@ -257,6 +271,11 @@ def get_user_by_reset_token(token):
     cursor.close()
     conn.close()
     return user  # Retourne l'utilisateur s'il existe
+
+   
+   
+
+
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password_token(token):
@@ -278,7 +297,7 @@ def reset_password_token(token):
             # Met à jour le mot de passe dans la base de données
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("UPDATE users SET password = %s WHERE email = %s", (hashed_password, user['email']))
+            cursor.execute("UPDATE users SET password_hash = %s WHERE email = %s", (hashed_password, user['email']))
             conn.commit()
             cursor.close()
             conn.close()

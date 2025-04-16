@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiffMate - Accueil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            padding: 60px 50px;
+        }
+
+        h1 {
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .description {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.15rem;
+            color: #333333;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            font-weight: 500;
+            padding: 10px 30px;
+            border-radius: 50px;
+            transition: background-color 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+        .logo {
+            width: 100px;
+            margin: 0 auto 25px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card text-center">
+            <img src="{{ url_for('static', filename='images/logo_head.png') }}" alt="Logo DiffMate" class="logo">
+
+            <h1>Bienvenue sur DiffMate</h1>
+            <p class="description">
+                <strong>DiffMate</strong> est une application moderne dédiée au calcul du coefficient de diffusion. Pensée pour être simple, rapide et fiable, elle permet aux étudiants, chercheurs ou ingénieurs de gagner en efficacité dans leurs travaux scientifiques.<br><br>
+                Grâce à une interface claire et intuitive, vous pouvez entrer vos données, obtenir des résultats précis instantanément. DiffMate vous accompagne dans vos travaux scientifiques en vous faisant gagner un temps précieux.
+            </p>
+            <a href="{{ url_for('login') }}" class="btn btn-custom">Se connecter</a>
+
+        </div>
+    </div>
+</body>
+</html>
