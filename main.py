@@ -4,15 +4,13 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime, timedelta
 from flask import session
 from flask_mail import Mail, Message
-from flask import session, redirect, url_for, flash
 from werkzeug.security import check_password_hash, generate_password_hash
-import mysql.connector
-import numpy as np
+import psycopg2
 import os
 import binascii
 import re
-
-#import os
+import numpy as np
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 
 # Charger les variables d'environnement depuis le fichier .env
@@ -34,24 +32,24 @@ app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+app.config['DATABASE_URL'] = os.getenv('DATABASE_URL')
 
 mail = Mail(app)
 
-# Paramètres de la base de données MySQL
-DB_CONFIG = {
-    'host': os.getenv('DB_HOST'),
-    'user': os.getenv('DB_USER'),
-    'password': os.getenv('DB_PASSWORD'),
-    'database': os.getenv('DB_NAME'),
-    'port': int(os.getenv('DB_PORT'))
-}
-
-
-# Connexion à la base de données
+# Connexion à la base de données PostgreSQL
 def get_db_connection():
-    return mysql.connector.connect(**DB_CONFIG)
+    database_url = os.getenv('DATABASE_URL')
+    url = urlparse(database_url)
+    conn = psycopg2.connect(
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
+    )
+    return conn
 
-# Vérifie si l'utilisateur est dans la base de données
+# Fonction pour récupérer un utilisateur par email
 def get_user_by_email(email):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -61,7 +59,7 @@ def get_user_by_email(email):
     conn.close()
     return user
 
-# Ajoute un utilisateur dans la base de données
+# Fonction pour ajouter un utilisateur dans la base de données
 def add_user_to_db(email, password_hash, date_naissance, genre, nom):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -69,6 +67,9 @@ def add_user_to_db(email, password_hash, date_naissance, genre, nom):
     conn.commit()
     cursor.close()
     conn.close()
+
+# ... (le reste de ton code reste inchangé)
+
 
 # Dictionnaire pour stocker les tentatives de connexion
 login_attempts = {}
