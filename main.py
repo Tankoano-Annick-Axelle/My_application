@@ -52,6 +52,44 @@ def get_db_connection():
     )
     return conn
 
+def create_tables():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Création de la table "users" si elle n'existe pas
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        date_naissance DATE NOT NULL,
+        genre VARCHAR(10) NOT NULL,
+        nom VARCHAR(100) NOT NULL,
+        reset_token TEXT
+    )
+    ''')
+
+    # Création de la table "results" pour enregistrer les résultats du calcul
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS results (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        D_AB DOUBLE PRECISION NOT NULL,
+        erreur_relative DOUBLE PRECISION NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+
+    
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+# Appeler la fonction pour créer les tables au démarrage de l'application
+create_tables()
+
+
 # Fonction pour récupérer un utilisateur par email
 def get_user_by_email(email):
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
