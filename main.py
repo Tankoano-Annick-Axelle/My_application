@@ -21,6 +21,8 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # Configuration de la session
+
+print("SESSION_LIFETIME =", os.getenv('SESSION_LIFETIME'))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=int(os.getenv('SESSION_LIFETIME')))
 app.config['SESSION_PERMANENT'] = True
 
