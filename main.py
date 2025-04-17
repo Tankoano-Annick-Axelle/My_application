@@ -375,6 +375,16 @@ def invalidate_reset_token(email):
     cursor.close()
     conn.close()
 
+def add_resultat_to_database_db(user_id, D_AB, erreur_relative):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO results (user_id, d_ab, erreur_relative) VALUES (%s, %s, %s)",
+        (user_id, D_AB, erreur_relative)
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 @app.route('/calcul', methods=['GET', 'POST'])
 def calcul():
@@ -399,7 +409,7 @@ def calcul():
             D_exp = float(request.form.get('D_exp', 0))
 
             # Calcul des résultats
-            d_ab, erreur_relative = calculer_coefficient_diffusion(
+            D_AB, erreur_relative = calculer_coefficient_diffusion(
                 D_AB_initial, D_BA_initial, fraction_A, coef_lambda_A, coef_lambda_B,
                 q_A, q_B, theta_A, theta_B, theta_BA, theta_AB, theta_AA, theta_BB,
                 tau_AB, tau_BA, D_exp
@@ -407,10 +417,10 @@ def calcul():
 
             # Enregistrement des résultats dans la base de données
             user_id = session.get('user_id', 1)  # Remplacez par l'ID utilisateur réel si disponible
-            add_resultat_to_database_db(user_id, d_ab, erreur_relative)
+            add_resultat_to_database_db(user_id, D_AB, erreur_relative)
 
             # Passer les résultats à la page resultats.html
-            return render_template('resultats.html', d_ab=d_ab, erreur_relative=erreur_relative)
+            return render_template('resultats.html', d_ab=D_AB, erreur_relative=erreur_relative)
 
         except ValueError as e:
             print(f"Erreur de conversion des données : {e}")
@@ -424,21 +434,7 @@ def calcul():
     return render_template('calcul.html')
 
         # Fonction pour enregistrer les résultats dans la base de données
-def add_resultat_to_database_db(user_id, d_ab, erreur_relative):
-    """Ajoute un résultat dans la base de données."""
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO results (user_id, D_AB, erreur_relative) VALUES (%s, %s, %s)",
-            (user_id, d_ab, erreur_relative)
-        )
-        conn.commit()
-        cursor.close()
-        conn.close()
-        print("Résultat enregistré avec succès dans la base de données.")
-    except Exception as e:
-        print(f"Erreur lors de l'enregistrement des résultats : {e}")
+
 
     from flask import session, redirect, url_for, flash
 
