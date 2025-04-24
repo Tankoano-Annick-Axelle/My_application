@@ -488,22 +488,6 @@ def logout_user():
     return redirect(url_for('login'))
 
 
-def test_smtp_connection():
-    try:
-        with smtplib.SMTP(app.config['MAIL_SERVER'], app.config['MAIL_PORT']) as server:
-            server.ehlo()
-            if app.config['MAIL_USE_TLS']:
-                server.starttls()
-            server.login(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
-            print("Connexion SMTP réussie.")
-    except smtplib.SMTPAuthenticationError as e:
-        print(f"Erreur d'authentification SMTP : {e}")
-    except Exception as e:
-        print(f"Erreur de connexion SMTP : {e}")
-
-# Appeler cette fonction au démarrage pour tester la connexion SMTP
-test_smtp_connection()
-
 
 # Exécution de l'application Flask
 if __name__ == '__main__':
