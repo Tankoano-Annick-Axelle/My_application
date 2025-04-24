@@ -36,6 +36,8 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 app.config['DATABASE_URL'] = os.getenv('DATABASE_URL')
 
+
+
 mail = Mail(app)
 
 # Connexion à la base de données PostgreSQL
@@ -157,22 +159,46 @@ def reset_attempts(email):
         login_attempts[email]['attempts'] = 0
         login_attempts[email]['locked_until'] = datetime.min
 
-        # Fonction de calcul du coefficient de diffusion
-def calculer_coefficient_diffusion(D_AB_initial, D_BA_initial, fraction_A, coef_lambda_A, coef_lambda_B, q_A, q_B, theta_A, theta_B, theta_BA, theta_AB, theta_AA, theta_BB, tau_AB, tau_BA, D_exp):
+ # Fonction de calcul du coefficient de diffusion
+def calculer_coefficient_diffusion(
+    D_AB_initial, D_BA_initial, fraction_A,
+    coef_lambda_A, coef_lambda_B, q_A, q_B,
+    theta_A, theta_B, theta_BA, theta_AB,
+    theta_AA, theta_BB, tau_AB, tau_BA, D_exp
+):
     fraction_B = 1 - fraction_A
     phi_A = fraction_A * coef_lambda_A / (fraction_A * coef_lambda_A + fraction_B * coef_lambda_B)
     phi_B = fraction_B * coef_lambda_B / (fraction_A * coef_lambda_A + fraction_B * coef_lambda_B)
-
-    terme1 = fraction_B * np.log(D_AB_initial) + fraction_A * np.log(D_BA_initial) + 2 * (fraction_A * np.log(fraction_A / phi_A) + fraction_B * np.log(fraction_B / phi_B))
-    terme2 = 2 * fraction_A * fraction_B * ((phi_A / fraction_A) * (1 - (coef_lambda_A / coef_lambda_B)) + (phi_B / fraction_B) * (1 - (coef_lambda_B / coef_lambda_A)))
-    terme3 = (fraction_B * q_A) * ((1 - theta_BA ** 2) * np.log(tau_BA) + (1 - theta_BB ** 2) * tau_AB * np.log(tau_AB))
-    terme4 = (fraction_A * q_B) * ((1 - theta_AB ** 2) * np.log(tau_AB) + (1 - theta_AA ** 2) * tau_BA * np.log(tau_BA))
+    
+    terme1 = (
+        fraction_B * np.log(D_AB_initial)
+        + fraction_A * np.log(D_BA_initial)
+        + 2 * (
+            fraction_A * np.log(fraction_A / phi_A)
+            + fraction_B * np.log(fraction_B / phi_B)
+        )
+    )
+    terme2 = 2 * fraction_A * fraction_B * (
+        (phi_A / fraction_A) * (1 - (coef_lambda_A / coef_lambda_B))
+        + (phi_B / fraction_B) * (1 - (coef_lambda_B / coef_lambda_A))
+    )
+    terme3 = (fraction_B * q_A) * (
+        (1 - theta_BA ** 2) * np.log(tau_BA)
+        + (1 - theta_BB ** 2) * tau_AB * np.log(tau_AB)
+    )
+    terme4 = (fraction_A * q_B) * (
+        (1 - theta_AB ** 2) * np.log(tau_AB)
+        + (1 - theta_AA ** 2) * tau_BA * np.log(tau_BA)
+    )
 
     ln_D_AB = terme1 + terme2 + terme3 + terme4
-    D_AB = np.exp(ln_D_AB)
-    erreur_relative = abs((D_AB - D_exp)) / D_exp * 100
+    # on calcule D_AB et on convertit directement en float natif
+    D_AB = float(np.exp(ln_D_AB))
+    # idem pour l'erreur
+    erreur_relative = float(abs((D_AB - D_exp)) / D_exp * 100)
 
     return D_AB, erreur_relative
+
 
 
 # Route pour la connexion
@@ -470,6 +496,8 @@ def test_smtp_connection():
                 server.starttls()
             server.login(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
             print("Connexion SMTP réussie.")
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"Erreur d'authentification SMTP : {e}")
     except Exception as e:
         print(f"Erreur de connexion SMTP : {e}")
 
