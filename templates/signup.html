@@ -1,109 +1,125 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Inscription</title>
-    <link rel="shortcut icon" href="../static/images/logo_head.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #ffffff;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <title>Inscription</title>
+  <link rel="shortcut icon" href="../static/images/logo_head.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
 
-        .signup-container {
-            background-color: #ffffff;
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
+      /* Fond + calque sombre renforcé */
+      background-image:
+      linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+      url("{{ url_for('static', filename='images/image_background.jpg') }}");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    }
 
-        .signup-container h2 {
-            color: #0d6efd;
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
+    .signup-container {
+      /* Fond semi-transparent pour révéler le background */
+      background: rgba(255, 255, 255, 0.85);
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+    }
 
-        .btn-primary {
-            background-color: #0d6efd;
-            border: none;
-        }
+    .signup-container h2 {
+      color: black;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: bold;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+    }
 
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-        }
+    .form-label {
+      font-weight: 500;
+    }
 
-        .form-label {
-            font-weight: 500;
-        }
-    </style>
+    .form-control {
+      background: rgba(255,255,255,0.9);
+    }
+
+    .btn-primary {
+      background-color: #0d6efd;
+      border: none;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 12px rgba(13,110,253,0.4);
+    }
+    .btn-primary:hover {
+      background-color: #0b5ed7;
+      box-shadow: 0 6px 16px rgba(11,94,215,0.5);
+    }
+
+    /* Alertes */
+    .alert {
+      background: rgba(255,255,255,0.9);
+    }
+  </style>
 </head>
 <body>
 
-    <div class="signup-container">
-        <h2>Inscription</h2>
-        <form action="/signup" method="POST">
-            <div class="mb-3">
-                <label for="nom" class="form-label">Nom</label>
-                <input type="text" class="form-control" id="nom" name="nom" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Adresse email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Mot de passe</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            
-            
+  <div class="signup-container">
+    <h2>Inscription</h2>
+    <form action="/signup" method="POST">
+      <div class="mb-3">
+        <label for="nom" class="form-label">Nom</label>
+        <input type="text" class="form-control" id="nom" name="nom" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Adresse email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <div class="mb-3">
+        <label for="confirm_password" class="form-label">Confirmer le mot de passe</label>
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+      </div>
+      <div class="mb-3">
+        <label for="date_naissance" class="form-label">Date de naissance</label>
+        <input type="date" class="form-control" id="date_naissance" name="date_naissance" required>
+      </div>
+      <div class="mb-3">
+        <label for="genre" class="form-label">Genre</label>
+        <select class="form-control" id="genre" name="genre" required>
+          <option value="Homme">Homme</option>
+          <option value="Femme">Femme</option>
+        </select>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
+      </div>
+    </form>
 
-            <div class="mb-3">
-                <label for="confirm_password" class="form-label">Confirmer le mot de passe</label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+    <!-- Bloc pour afficher les messages de succès ou d'erreur -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mt-3">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="form-group">
-                <label for="date_naissance">Date de naissance :</label>
-                <input type="date" class="form-control" id="date_naissance" name="date_naissance" required>
-            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
 
-            <div class="form-group">
-                <label for="genre">Genre :</label>
-                <select class="form-control" id="genre" name="genre" required>
-                    <option value="Homme">Homme</option>
-                    <option value="Femme">Femme</option>
-                    <option value="Autre">Autre</option>
-                </select>
-            </div>
-
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">S'inscrire</button>
-            </div>
-        </form>
-
-        <!-- Bloc pour afficher les messages de succès ou d'erreur -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="mt-3">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% endwith %}
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

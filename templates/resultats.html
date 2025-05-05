@@ -3,70 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultats</title>
+    <title>Résultats - DiffMate</title>
     <link rel="shortcut icon" href="../static/images/logo_head.png" alt="Logo DiffMate">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-image:
+        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
+        url("{{ url_for('static', filename='images/image_background.jpg') }}");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            filter: brightness(1.1);
         }
-        .result-box {
-            background-color: #ffffff;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .result-card {
+            background: rgba(255, 255, 255, 0.85);
+            border: none;
+            border-radius: 1rem;
+            padding: 3rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
             max-width: 600px;
             width: 100%;
-            text-align: center;
         }
-        h1 {
+        .result-card h1 {
+            color: #000;
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .result-list {
+            list-style: none;
+            padding: 0;
+        }
+        .result-list li {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        .result-list li span.label {
+            font-weight: 600;
+            color: #555;
+        }
+        .result-list li span.value {
+            font-weight: 700;
             color: #007bff;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            font-weight: bold;
         }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .btn-custom {
+        .btn-home {
             background-color: #007bff;
-            color: white;
-            padding: 12px 35px;
-            font-size: 18px;
-            border-radius: 25px;
+            color: #fff;
+            border-radius: 2rem;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
             transition: background-color 0.3s ease;
-            text-decoration: none;
+            margin-top: 2.5rem;
         }
-        .btn-custom:hover {
+        .btn-home:hover {
             background-color: #0056b3;
-        }
-        .alert-success {
-            background-color: #e9f7ef;
-            color: #3c763d;
-            border-color: #d6e9c6;
-            border-radius: 10px;
+            color: #fff;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-        <div class="result-box">
-            <h1 class="text-center">Résultats du Calcul</h1>
-            <div class="alert alert-success mt-4">
-                <p><strong>D_AB :</strong> {{ D_AB }}</p>
-                <p><strong>Erreur Relative :</strong> {{ erreur_relative }}%</p>
-            </div>
-            <div class="text-center mt-4">
-                <a href="/home" class="btn btn-custom">Retour à l'Accueil</a>
-            </div>
-        </div>
+    <div class="result-card text-center">
+        <h1>Vos Résultats</h1>
+        <ul class="result-list">
+            <li><span class="label">D<sub>AB</sub>:</span> <span class="value">{{ D_AB }}</span></li>
+            <li><span class="label">Erreur Relative:</span> <span class="value">{{ erreur_relative }}%</span></li>
+        </ul>
+        <a href="/home" class="btn-home">Retour à l'accueil</a>
     </div>
 </body>
 </html>
+
+

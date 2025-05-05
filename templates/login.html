@@ -1,76 +1,98 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link rel="shortcut icon" href="../static/images/logo_head.png" alt="Logo DiffMate">
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(to right, white, white);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-container {
-            background-color: white;
-            padding: 2rem 3rem;
-            border-radius: 15px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .form-control::placeholder {
-            font-style: normal;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion</title>
+  <link rel="shortcut icon" href="../static/images/logo_head.png" alt="Logo DiffMate">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* même image de fond + calque sombre */
+      background-image:
+        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
+        url("{{ url_for('static', filename='images/image_background.jpg') }}");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .login-container {
+      /* fond translucide pour laisser voir l’arrière-plan */
+      background: rgba(255, 255, 255, 0.85);
+      padding: 2rem 3rem;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .form-control::placeholder {
+      font-style: normal;
+    }
+
+    .btn-primary {
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+      box-shadow: 0 4px 12px rgba(0,86,179,0.5);
+    }
+  </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <h2>Connexion</h2>
-        <form action="/login" method="POST">
-            <div class="mb-3">
-                <label for="name" class="form-label">Nom</label>
-                <input type="text" name="name" id="name" class="form-control" placeholder="Entrez votre nom" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" name="email" id="email" class="form-control" placeholder="Entrez votre email" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Mot de passe</label>
-                <input type="password" name="password" id="password" class="form-control" placeholder="Entrez votre mot de passe" required>
-            </div>
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Se connecter</button>
-            </div>
-            <div class="text-center mt-3">
-                <p class="mb-1">Vous n'avez pas de compte ?</p>
-                <p><a href="{{ url_for('reset_password') }}" target="_blank">Mot de passe oublié ?</a></p>
-                <a href="{{ url_for('signup') }}" class="btn btn-outline-primary">Sign Up</a>
-                
-            </div>
-        </form>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-         <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-         </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+  <div class="login-container">
+    <h2>Connexion</h2>
+    <form action="/login" method="POST">
+      <div class="mb-3">
+        <label for="name" class="form-label">Nom</label>
+        <input type="text" name="name" id="name" class="form-control" placeholder="Entrez votre nom" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" id="email" class="form-control" placeholder="Entrez votre email" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe</label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Entrez votre mot de passe" required>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+      </div>
+      <div class="text-center mt-3">
+        <p class="mb-1">Vous n'avez pas de compte ?</p>
+        <p><a href="{{ url_for('reset_password') }}" target="_blank">Mot de passe oublié ?</a></p>
+        <a href="{{ url_for('signup') }}" class="btn btn-outline-primary">S'inscrire</a>
+      </div>
+    </form>
 
-     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -234,8 +234,16 @@ def login():
     return render_template('login.html')
 
 @app.route('/')
-def index():
-    return render_template('accueil.html')  # La page avec bouton "Se connecter"
+@app.route('/accueil')
+def accueil():
+    return render_template('accueil.html')
+ 
+@app.route('/contactez-nous', methods=['POST'])
+def contact():
+    message = request.form.get('message')
+    # → Traitez le message : enregistrement, envoi de mail, etc.
+    flash("Message envoyé !", "success")
+    return redirect(url_for('accueil'))
 
 
 # Route pour la page d'accueil (après connexion réussie)
@@ -245,12 +253,6 @@ def home():
         return redirect(url_for('login'))
     return render_template('home.html')  # Accueil après login
 
-#Route pour se déconnecter
-@app.route('/logout')
-def logout():
-    session.pop('user_email', None)
-    flash("Vous avez été déconnecté avec succès.", "success")
-    return redirect(url_for('login'))
 
 def contient_caractere_special(mot_de_passe):
     return re.search(r"[!@#$%^&*(),.?\":{}|<>]", mot_de_passe) is not None
@@ -478,14 +480,23 @@ def add_resultat_to_database_db(user_id, D_AB, erreur_relative):
 
     from flask import session, redirect, url_for, flash
 
+# ----- Nouvelle route 'Profile' -----
+@app.route('/profile')
+def profile():
+    # Redirige si non connecté
+    if 'user_email' not in session:
+        flash('Veuillez vous connecter pour accéder à votre compte.', 'warning')
+        return redirect(url_for('login'))
+    # Récupère les infos utilisateur
+    user = get_user_by_email(session['user_email'])
+    return render_template('profile.html', current_user=user)
+
 # Renommée en logout_user pour éviter le conflit
 @app.route('/logout')
-def logout_user():
-    # Supprimer l'email de la session
+def logout():
     session.pop('user_email', None)
-    flash("Vous avez été déconnecté avec succès.", 'success')
-    # Rediriger l'utilisateur vers la page de connexion
-    return redirect(url_for('login'))
+    flash("Vous avez été déconnecté avec succès.", "success")
+    return redirect(url_for('accueil'))
 
 
 

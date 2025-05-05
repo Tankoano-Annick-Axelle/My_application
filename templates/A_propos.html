@@ -4,169 +4,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A propos</title>
+    <title>A propos - Méthode UNIFAC</title>
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="shortcut icon" href="../static/images/logo_head.png">
-    <link rel="stylesheet" href="styles.css"> <!-- Si tu externalises tes styles -->
-
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
-            background-color: #ffffff; /* Fond blanc */
+            background-image:
+      linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+      url("{{ url_for('static', filename='images/image_background.jpg') }}");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
             margin: 0;
             padding: 0;
         }
-
         header {
-            background-color: #007bff; /* Bleu Bootstrap */
+            background-color: rgba(128, 128, 128, 0);
             color: white;
             text-align: center;
-            padding: 15px 0;
+            padding: 20px 0;
         }
-
-        nav ul {
-            list-style-type: none;
-            padding-left: 0;
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
         }
-
-        nav ul li {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        h2 {
-            color: #007bff; /* Bleu Bootstrap */
-            font-weight: bold;
-        }
-
-        main {
-            margin: 40px auto;
+        nav.breadcrumb {
+            --bs-breadcrumb-divider: '>';
+            margin: 20px auto;
             max-width: 960px;
+        }
+        nav.breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+            color: #6c757d;
+        }
+        main {
+            max-width: 960px;
+            margin: 40px auto;
             padding: 0 20px;
         }
-
-        section {
+        section.card-section {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px;
             margin-bottom: 30px;
         }
-
-        .image-section img {
-            max-width: 60%; /* Réduction de la taille de la première image */
-            height: auto;
-            border-radius: 8px;
-            margin-top: 20px;
+        section.card-section h2 {
+            color: #007bff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
         }
-
-        .section-content p {
+        section.card-section p,
+        section.card-section ul {
             text-align: justify;
-            font-size: 1.1rem;
             line-height: 1.6;
             color: #333;
         }
-
-        .highlight {
-            color: #007bff; /* Bleu Bootstrap */
-            font-weight: bold;
+        section.card-section ul {
+            list-style: none;
+            padding-left: 0;
         }
-
-        footer {
-            background-color: #007bff; /* Même bleu Bootstrap pour la cohérence */
-            color: white;
-            text-align: center;
-            padding: 8px 0;
-            margin-top: 40px;
-            font-size: 0.9rem;
+        section.card-section ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
         }
+        .image-section img {
+    max-width: 60%;
+    height: 100%;
+    min-height: 350px; /* ajustable selon la hauteur moyenne de tes sections */
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 20px auto;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    background: #ffffff;
+    padding: 10px;
+}
+
+        .footer {
+  background: transparent;
+  padding: 20px 0 10px 0;  /* moins d’espace */
+  text-align: center;
+  border-top: none;        /* retire la bordure */
+  box-shadow: none; 
+  margin-top: 40px;       /* retire l’ombre */
+}
+
+.footer p {
+  margin: 0;
+  color: #ffffff;             /* texte plus clair si sur fond foncé */
+  font-size: 0.85rem;
+}
+
+
+
     </style>
 </head>
 
-<body id="A propos">
-
+<body>
     <header>
-        <h1>Coefficient de diffusion</h1>
+        <h1><i class="bi bi-journal-text"></i> Méthode UNIFAC</h1>
     </header>
 
-    <nav class="container">
-        <ul>
-            <li><strong>Description</strong></li>
-        </ul>
+    <!-- Breadcrumb for context -->
+    <nav aria-label="breadcrumb" class="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i> Accueil</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><i class="bi bi-info-circle"></i> À propos</li>
+      </ol>
     </nav>
 
-    <div class="container">
-        <p class="section-content">
-            <em><strong>Qu'est-ce que le coefficient de diffusion ?</strong></em><br>
-            Le coefficient de diffusion est un paramètre physique qui décrit la capacité d'une substance à se répartir dans un
-            milieu sous l'effet d'un gradient de concentration. Il quantifie le rapport entre le flux molaire résultant de la
-            diffusion moléculaire et le gradient de concentration de l'espèce chimique concernée (ou, plus généralement, de la
-            variable motrice responsable de cette diffusion), conformément à la loi de Fick. Il s'exprime en mètre carré par
-            seconde (m²/s) et est noté D.
-            <br>
-            Le but de cette application est de calculer facilement le coefficient de diffusion de n'importe quel mélange, en utilisant la méthode UNIFAC.
-        </p>
+    <main>
+        <section class="card-section">
+            <h2><i class="bi bi-info-circle-fill"></i> Qu'est-ce que le coefficient de diffusion ?</h2>
+            <p>
+                Le coefficient de diffusion est un paramètre physique qui décrit la capacité d'une substance à se répartir dans un
+                milieu sous l'effet d'un gradient de concentration. Il quantifie le rapport entre le flux molaire résultant de la
+                diffusion moléculaire et le gradient de concentration de l'espèce chimique concernée (ou, plus généralement, de la
+                variable motrice responsable de cette diffusion), conformément à la loi de Fick. Il s'exprime en mètre carré par
+                seconde (m²/s) et est noté D.
+            </p>
+            <p>
+                Le but de cette application est de calculer facilement le coefficient de diffusion de n'importe quel mélange, en utilisant la méthode UNIFAC.
+            </p>
+        </section>
 
-        <div class="image-section text-center">
-            <img src="{{ url_for('static', filename='images/image_diffusion.jpg') }}" alt="Illustration montrant la diffusion des particules dans un milieu" class="img-fluid">
-
+        <div class="image-section">
+            <img src="{{ url_for('static', filename='images/image_diffusion.jpg') }}" alt="Illustration montrant la diffusion des particules dans un milieu">
         </div>
 
-        <main>
-            <section>
-                <nav>
-                    <ul>
-                        <li><strong>La méthode UNIFAC</strong></li>
-                    </ul>
-                </nav>
-                <p class="section-content">
-                    La méthode UNIversal Functional Activity Coefficient (<strong>UNIFAC</strong> en anglais, en français Coefficient d'Activité Fonctionnel UNIversel) est un système semi-empirique de prévision d'une activité chimique non-électrolyte dans des mélanges non idéaux.
-                    <br>
-                    UNIFAC utilise le groupe fonctionnel présent sur les molécules qui constituent le mélange liquide pour calculer les coefficients d'activité. En utilisant les interactions de chacun des groupes fonctionnels présents sur les molécules, ainsi que des coefficients d'interaction binaires, l'activité de chacune des solutions peut être calculée. Ces informations peuvent être utilisées pour obtenir des renseignements sur les équilibres liquides, ce qui est utile dans de nombreux calculs thermodynamiques, tels que la conception d'un réacteur chimique, et les calculs de distillation.
-                    Dans le cadre du transfert de masse, la méthode UNIFAC permet de calculer les propriétés suivantes :
-                    <br>
-                    Les coefficients d'activité : Ils permettent de quantifier l'écart par rapport à l'idéalité dans un mélange liquide et sont cruciaux pour la modélisation des flux de masse entre les différentes phases.
-                    <br>
-                    Les propriétés de diffusion : En connaissant les coefficients d'activité, il est possible d'estimer la diffusivité effective D des espèces chimiques dans le mélange.
-                    <br>
-                    L'équilibre liquide-vapeur : Les coefficients d'activité influencent l'évaporation et la condensation, éléments clés du transfert de masse dans les procédés de séparation, tels que la distillation.
-                    <br>
-                     <br>
-                    <strong>Avantages de la méthode UNIFAC pour le transfert de masse</strong>
-                    <br>
-                    Elle permet la: 
-                    Précision dans les systèmes multicomposants : La méthode UNIFAC est particulièrement adaptée pour les systèmes contenant plusieurs composants, offrant une modélisation plus précise du transfert de masse comparé à des méthodes simplifiées.
-                    <br>
-                    Réduction des calculs complexes : En utilisant des groupes fonctionnels pour décrire les interactions, UNIFAC réduit la complexité des calculs thermodynamiques pour des mélanges complexes.
-                    <br>
-                    Large gamme d'applications : La méthode peut être appliquée à différents types de mélanges, qu'ils soient gazeux, liquides ou dans des systèmes immiscibles, ce qui en fait un outil polyvalent dans l'analyse du transfert de masse.
-                    <br>
-                    <br>
-                    <strong>Utilisation de la méthode UNIFAC et de la méthode Hsu et Chen pour le calcul du coefficient de diffusion</strong>
-                    <br>
-                    Le calcul précis des coefficients de diffusion dans des mélanges multicomposants est essentiel pour les applications industrielles et les processus chimiques. Parmi les méthodes utilisées pour estimer ces coefficients, on retrouve la méthode UNIFAC et la méthode Hsu et Chen (C'est une extension de l'équation de Wilke-Chang), qui, bien qu'initialement indépendantes, peuvent être combinées pour obtenir des résultats plus précis.
-                    <br>
-                    La méthode Hsu et Chen est utilisée pour estimer les coefficients de diffusion dans des mélanges, principalement gazeux ou liquides. Elle constitue une extension de l'approche de Wilke-Chang et inclut des paramètres tels que la viscosité du mélange, les volumes molaires des composants, ainsi que des facteurs de correction pour prendre en compte les interactions complexes.
-                    <br>
-                    La méthode UNIFAC permet de calculer les coefficients d'activité des composants du mélange. Elle permet aussi de faire l'estimation de la viscosité et des volumes molaires des composants du mélange. Ces propriétés sont cruciales pour les calculs dans la méthode Hsu et Chen, car elles influencent directement le coefficient de diffusion. On recueille les données de viscosité et de volumes molaires fournies par UNIFAC qu'on insère dans l'équation de Hsu et Chen pour calculer le coefficient de diffusion D_AB.
-                    <br>
-                    Par ailleurs, UNIFAC permet de mieux modéliser les interactions moléculaires entre les groupes fonctionnels. Ces interactions sont utilisées pour estimer la viscosité du mélange, ce qui permet de rendre les calculs du coefficient de diffusion plus précis. Quant aux facteurs de correction (phi), ils peuvent être ajustés grâce aux informations fournies par UNIFAC sur les interactions thermodynamiques dans le mélange. Cela permet d'améliorer la représentation des propriétés réelles du mélange.
-                </p>
-            </section>
-        </main>
-    </div>
+        <section class="card-section">
+            <h2><i class="bi bi-flask-fill"></i> La méthode UNIFAC</h2>
+            <p>
+                La méthode UNIversal Functional Activity Coefficient (<strong>UNIFAC</strong> en anglais, en français Coefficient d'Activité Fonctionnel UNIversel) est un système semi-empirique de prévision d'une activité chimique non-électrolyte dans des mélanges non idéaux.
+            </p>
+            <p>
+                UNIFAC utilise le groupe fonctionnel présent sur les molécules qui constituent le mélange liquide pour calculer les coefficients d'activité. En utilisant les interactions de chacun des groupes fonctionnels présents sur les molécules, ainsi que des coefficients d'interaction binaires, l'activité de chacune des solutions peut être calculée. Ces informations peuvent être utilisées pour obtenir des renseignements sur les équilibres liquides, ce qui est utile dans de nombreux calculs thermodynamiques, tels que la conception d'un réacteur chimique, et les calculs de distillation.
+            </p>
+            <p>
+                Dans le cadre du transfert de masse, la méthode UNIFAC permet de calculer les propriétés suivantes :
+            </p>
+            <ul>
+                <li><i class="bi bi-droplet-half"></i> Les coefficients d'activité : Ils permettent de quantifier l'écart par rapport à l'idéalité dans un mélange liquide et sont cruciaux pour la modélisation des flux de masse entre les différentes phases.</li>
+                <li><i class="bi bi-arrow-down-up"></i> Les propriétés de diffusion : En connaissant les coefficients d'activité, il est possible d'estimer la diffusivité effective D des espèces chimiques dans le mélange.</li>
+                <li><i class="bi bi-clouds-fill"></i> L'équilibre liquide-vapeur : Les coefficients d'activité influencent l'évaporation et la condensation, éléments clés du transfert de masse dans les procédés de séparation, tels que la distillation.</li>
+            </ul>
+        </section>
 
-    <footer>
+        <section class="card-section">
+            <h2><i class="bi bi-check-circle-fill"></i> Avantages de la méthode UNIFAC pour le transfert de masse</h2>
+            <ul>
+                <li><i class="bi bi-star-fill"></i> Précision dans les systèmes multicomposants : La méthode UNIFAC est particulièrement adaptée pour les systèmes contenant plusieurs composants, offrant une modélisation plus précise du transfert de masse comparé à des méthodes simplifiées.</li>
+                <li><i class="bi bi-sliders"></i> Réduction des calculs complexes : En utilisant des groupes fonctionnels pour décrire les interactions, UNIFAC réduit la complexité des calculs thermodynamiques pour des mélanges complexes.</li>
+                <li><i class="bi bi-globe2"></i> Large gamme d'applications : La méthode peut être appliquée à différents types de mélanges, qu'ils soient gazeux, liquides ou dans des systèmes immiscibles, ce qui en fait un outil polyvalent dans l'analyse du transfert de masse.</li>
+            </ul>
+        </section>
+
+        <section class="card-section">
+            <h2><i class="bi bi-gear-fill"></i> Utilisation de la méthode UNIFAC et de la méthode Hsu et Chen pour le calcul du coefficient de diffusion</h2>
+            <p>
+                Le calcul précis des coefficients de diffusion dans des mélanges multicomposants est essentiel pour les applications industrielles et les processus chimiques. Parmi les méthodes utilisées pour estimer ces coefficients, on retrouve la méthode UNIFAC et la méthode Hsu et Chen (C'est une extension de l'équation de Wilke-Chang), qui, bien qu'initialement indépendantes, peuvent être combinées pour obtenir des résultats plus précis.
+            </p>
+            <p>
+                La méthode Hsu et Chen est utilisée pour estimer les coefficients de diffusion dans des mélanges, principalement gazeux ou liquides. Elle constitue une extension de l'approche de Wilke-Chang et inclut des paramètres tels que la viscosité du mélange, les volumes molaires des composants, ainsi que des facteurs de correction pour prendre en compte les interactions complexes.
+            </p>
+            <p>
+                La méthode UNIFAC permet de calculer les coefficients d'activité des composants du mélange. Elle permet aussi de faire l'estimation de la viscosité et des volumes molaires des composants du mélange. Ces propriétés sont cruciales pour les calculs dans la méthode Hsu et Chen, car elles influencent directement le coefficient de diffusion. On recueille les données de viscosité et de volumes molaires fournies par UNIFAC qu'on insère dans l'équation de Hsu et Chen pour calculer le coefficient de diffusion D_AB.
+            </p>
+            <p>
+                Par ailleurs, UNIFAC permet de mieux modéliser les interactions moléculaires entre les groupes fonctionnels. Ces interactions sont utilisées pour estimer la viscosité du mélange, ce qui permet de rendre les calculs du coefficient de diffusion plus précis. Quant aux facteurs de correction (phi), ils peuvent être ajustés grâce aux informations fournies par UNIFAC sur les interactions thermodynamiques dans le mélange. Cela permet d'améliorer la représentation des propriétés réelles du mélange.
+            </p>
+        </section>
+    </main>
+
+    <footer class="footer">
         <p>&copy; 2025 DiffMate. Tous droits réservés.</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

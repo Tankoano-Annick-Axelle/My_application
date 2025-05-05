@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon Compte</title>
+  <link rel="shortcut icon" href="../static/images/logo_head.png" alt="Logo DiffMate">
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+        url("{{ url_for('static', filename='images/image_background.jpg') }}");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      margin: 0;
+      filter: brightness(1.05); /* léger boost de luminosité */
+    }
+    .navbar {
+      background-color: transparent;
+    }
+    .nav-link {
+      color: #fff !important;
+      font-weight: 500;
+    }
+    .nav-link.active {
+      background-color: transparent;
+      border-radius: 0.25rem;
+    }
+    .profile-container {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 15px;
+    }
+    .profile-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .profile-header h1 {
+      color: white;
+      font-size: 2.25rem;
+      font-weight: bold;
+    }
+    .profile-card {
+      background-color: rgba(255, 255, 255, 0.85);
+      border: none;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.1);
+    }
+    .profile-card .card-header {
+      background-color: rgba(13, 110, 253, 0.85);
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .list-group-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: transparent;
+      border: none;
+      padding: 1rem 1.5rem;
+      color: #333;
+    }
+    .list-group-item + .list-group-item {
+      border-top: 1px solid #e9ecef;
+    }
+    .list-group-item .bi {
+      font-size: 1.5rem;
+      color: #0d6efd;
+    }
+    footer {
+      text-align: center;
+      padding: 15px 0;
+      color: white;
+      margin-top: 40px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navProfile">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-center" id="navProfile">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('profile') }}">PROFIL</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="profile-container">
+    <div class="profile-header">
+      <h1><i class="bi bi-person-circle"></i> Mon Compte</h1>
+      <p class="text-muted">Informations personnelles</p>
+    </div>
+    <div class="card profile-card">
+      <div class="card-header">
+        <i class="bi bi-info-square-fill"></i> Détails du profil
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <i class="bi bi-person-fill"></i>
+          <div>
+            <div class="fw-semibold">Nom</div>
+            <div>{{ current_user.nom }}</div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <i class="bi bi-calendar-event-fill"></i>
+          <div>
+            <div class="fw-semibold">Date de naissance</div>
+            <div>{{ current_user.date_naissance }}</div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <i class="bi bi-gender-ambiguous"></i>
+          <div>
+            <div class="fw-semibold">Genre</div>
+            <div>{{ current_user.genre }}</div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <i class="bi bi-envelope-fill"></i>
+          <div>
+            <div class="fw-semibold">Email</div>
+            <div>{{ current_user.email }}</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 DiffMate. Tous droits réservés.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
